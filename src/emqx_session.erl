@@ -650,7 +650,7 @@ redispatch_shared_messages(#session{inflight = Inflight}) ->
                   %% Note that dispatch is called with self() in failed subs
                   %% This is done to avoid dispatching back to caller
                   Delivery = #delivery{sender = self(), message = Msg},
-                  emqx_shared_sub:dispatch(Group, Topic, Delivery, [self()]);
+                  emqx_shared_sub:dispatch_to_non_self(Group, Topic, Delivery);
               _ ->
                   false
           end;
@@ -716,4 +716,3 @@ age(Now, Ts) -> Now - Ts.
 set_field(Name, Value, Session) ->
     Pos = emqx_misc:index_of(Name, record_info(fields, session)),
     setelement(Pos+1, Session, Value).
-
